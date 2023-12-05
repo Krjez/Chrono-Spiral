@@ -14,7 +14,7 @@ class Player extends GameObject {
   // Constructor initializes the game object and add necessary components
   constructor(x, y) {
     super(x, y); // Call parent's constructor
-    this.renderer = new Renderer('blue', 50, 50, Images.player); // Add renderer
+    this.renderer = new Renderer('blue', 50, 50, Images.playerIdle); // Add renderer
     this.addComponent(this.renderer);
     this.addComponent(new Physics({ x: 0, y: 0 }, { x: 0, y: 0 })); // Add physics
     this.addComponent(new Input()); // Add input for handling user input

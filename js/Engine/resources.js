@@ -1,6 +1,7 @@
 // Create an Images object to hold the Image instances for the player and the enemy.
 const Images = {
-  player: new Image(), // The Image instance for the player.
+  playerIdle: new Image(), // The Image instance for the player.
+  playerJump: new Image(), //Testing WIP
   enemy: new Image(), // The Image instance for the enemy.
 };
 
@@ -12,7 +13,8 @@ const AudioFiles = {
 };
 
 // Set the source of the player image.
-Images.player.src = './resources/images/player/player.png'; // Update the image path
+Images.playerIdle.src = "./resources/images/player/idle/idle1.png"; // Update the image path
+Images.playerJump.src = "./resources/images/player/jump/jump.png";
 
 // Set the source of the enemy image.
 Images.enemy.src = './resources/images/enemy/enemy.png'; // Update the image path
