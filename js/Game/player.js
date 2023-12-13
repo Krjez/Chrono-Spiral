@@ -24,14 +24,16 @@ class Player extends GameObject {
     this.score = 0;
     this.isOnPlatform = false;
     this.isJumping = false;
-    this.jumpForce = 250;
+    this.jumpForce = 350;
     this.jumpTime = 0.3;
     this.jumpTimer = 0;
     this.isInvulnerable = false;
 
+    //Time Lock - Spacebar ability
     this.isTimeLockOn = false;
+    this.timeLockBuffer = 0;
+    this.timeLockSaved = [];
     this.timeLockCooldown = 0;
-    this.timeLockSaved = [0, 0];
   }
 
   // The update function runs every frame and contains game logic
@@ -42,12 +44,12 @@ class Player extends GameObject {
     // Handle player movement
     if (input.isKeyDown("KeyD"))
     {
-      physics.velocity.x = 100;
+      physics.velocity.x = 150;
       this.direction = -1;
     }
     else if (input.isKeyDown("KeyA"))
     {
-      physics.velocity.x = -100;
+      physics.velocity.x = -150;
       this.direction = 1;
     }
     else
@@ -56,18 +58,47 @@ class Player extends GameObject {
     }
 
     // Handle player jumping
-    if (input.isKeyDown("Space") && this.isOnPlatform) {
+    if (input.isKeyDown("KeyW") && this.isOnPlatform)
+    {
       this.startJump();
+    }
+
+    //Faster falling down - concept for later
+    if(input.isKeyDown("KeyS") && !this.isOnPlatform)
+    {
+      physics.velocity.y += 20;
     }
 
     if (this.isJumping) {
       this.updateJump(deltaTime);
     }
 
-    if(input.isKeyDown("KeyQ") && !this.timeLockCooldown > 0)
+    if(input.isKeyDown("Space") && !this.timeLockBuffer > 0 && !this.timeLockCooldown > 0)
     {
-      this.timeLockHandle();
+      this.timeLockBuffer = 30;
+      //small delay so the functions won't call each other repeatedly in consecutive frames as player holds space for longer than 1 frame
+      if(!this.isTimeLockOn)
+      {
+       this.startTimeLock();
+      }
+      else
+      {
+        this.timeLockActivation();
+      }
     }
+
+    //TODO cleanup better
+    if(this.timeLockBuffer > 0)
+    {
+      this.timeLockBuffer -= 1;
+    }
+
+    if(this.timeLockCooldown > 0)
+    {
+      this.timeLockCooldown -= 1;
+    }
+    
+    
 
     // Handle collisions with collectibles
     const collectibles = this.game.gameObjects.filter((obj) => obj instanceof Collectible);
@@ -140,31 +171,23 @@ class Player extends GameObject {
     }
   }
 
-  timeLockHandle()
-  {
-    if(this.isTimeLockOn)
-    {
-      this.timeLockActivation();
-      //cooldown
-    }
-    else
-    {
-      this.startTimeLock();
-    }
-
-  }
-
   startTimeLock()
   {
     this.isTimeLockOn = true;
-    this.timeLockSaved = [this.x, this.y];
+    this.timeLockSaved = [this.x, this.y, this.direction, this.getComponent(Physics).velocity.x, this.getComponent(Physics).velocity.y];
 
   }
 
   timeLockActivation()
   {
+    this.isTimeLockOn = false;
     this.x = this.timeLockSaved[0];
     this.y = this.timeLockSaved[1];
+    this.direction = this.timeLockSaved[2];
+    this.getComponent(Physics).velocity.x = this.timeLockSaved[3];
+    this.getComponent(Physics).velocity.y = this.timeLockSaved[4];
+
+    this.timeLockCooldown = 150;
   }
 
 
