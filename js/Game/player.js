@@ -24,39 +24,49 @@ class Player extends GameObject {
     this.score = 0;
     this.isOnPlatform = false;
     this.isJumping = false;
-    this.jumpForce = 400;
+    this.jumpForce = 250;
     this.jumpTime = 0.3;
     this.jumpTimer = 0;
     this.isInvulnerable = false;
-    this.isGamepadMovement = false;
-    this.isGamepadJump = false;
+
+    this.isTimeLockOn = false;
+    this.timeLockCooldown = 0;
+    this.timeLockSaved = [0, 0];
   }
 
   // The update function runs every frame and contains game logic
   update(deltaTime) {
     const physics = this.getComponent(Physics); // Get physics component
     const input = this.getComponent(Input); // Get input component
-
-    this.handleGamepadInput(input);
     
     // Handle player movement
-    if (!this.isGamepadMovement && input.isKeyDown('ArrowRight')) {
+    if (input.isKeyDown("KeyD"))
+    {
       physics.velocity.x = 100;
       this.direction = -1;
-    } else if (!this.isGamepadMovement && input.isKeyDown('ArrowLeft')) {
+    }
+    else if (input.isKeyDown("KeyA"))
+    {
       physics.velocity.x = -100;
       this.direction = 1;
-    } else if (!this.isGamepadMovement) {
+    }
+    else
+    {
       physics.velocity.x = 0;
     }
 
     // Handle player jumping
-    if (!this.isGamepadJump && input.isKeyDown('ArrowUp') && this.isOnPlatform) {
+    if (input.isKeyDown("Space") && this.isOnPlatform) {
       this.startJump();
     }
 
     if (this.isJumping) {
       this.updateJump(deltaTime);
+    }
+
+    if(input.isKeyDown("KeyQ") && !this.timeLockCooldown > 0)
+    {
+      this.timeLockHandle();
     }
 
     // Handle collisions with collectibles
@@ -109,42 +119,9 @@ class Player extends GameObject {
     super.update(deltaTime);
   }
 
-  handleGamepadInput(input){
-    const gamepad = input.getGamepad(); // Get the gamepad input
-    const physics = this.getComponent(Physics); // Get physics component
-    if (gamepad) {
-      // Reset the gamepad flags
-      this.isGamepadMovement = false;
-      this.isGamepadJump = false;
 
-      // Handle movement
-      const horizontalAxis = gamepad.axes[0];
-      // Move right
-      if (horizontalAxis > 0.1) {
-        this.isGamepadMovement = true;
-        physics.velocity.x = 100;
-        this.direction = -1;
-      } 
-      // Move left
-      else if (horizontalAxis < -0.1) {
-        this.isGamepadMovement = true;
-        physics.velocity.x = -100;
-        this.direction = 1;
-      } 
-      // Stop
-      else {
-        physics.velocity.x = 0;
-      }
-      
-      // Handle jump, using gamepad button 0 (typically the 'A' button on most gamepads)
-      if (input.isGamepadButtonDown(0) && this.isOnPlatform) {
-        this.isGamepadJump = true;
-        this.startJump();
-      }
-    }
-  }
-
-  startJump() {
+  startJump()
+  {
     // Initiate a jump if the player is on a platform
     if (this.isOnPlatform) { 
       this.isJumping = true;
@@ -154,13 +131,43 @@ class Player extends GameObject {
     }
   }
   
-  updateJump(deltaTime) {
+  updateJump(deltaTime)
+  {
     // Updates the jump progress over time
     this.jumpTimer -= deltaTime;
     if (this.jumpTimer <= 0 || this.getComponent(Physics).velocity.y > 0) {
       this.isJumping = false;
     }
   }
+
+  timeLockHandle()
+  {
+    if(this.isTimeLockOn)
+    {
+      this.timeLockActivation();
+      //cooldown
+    }
+    else
+    {
+      this.startTimeLock();
+    }
+
+  }
+
+  startTimeLock()
+  {
+    this.isTimeLockOn = true;
+    this.timeLockSaved = [this.x, this.y];
+
+  }
+
+  timeLockActivation()
+  {
+    this.x = this.timeLockSaved[0];
+    this.y = this.timeLockSaved[1];
+  }
+
+
 
   collidedWithEnemy() {
     // Checks collision with an enemy and reduce player's life if not invulnerable
