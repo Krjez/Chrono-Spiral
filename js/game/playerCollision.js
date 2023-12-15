@@ -1,25 +1,27 @@
+import Component from "../engine/component.js";
+import Player from "./player.js";
 import Ground from "./ground.js";
-import Physics from "../engine/physics.js";
 
-class PlayerCollision
+class PlayerCollision extends Component
 {
-
-    collideGround(deltaTime)
+    constructor()
     {
-        const physics = this.getComponent(Physics);
+        super();
+        this.player = this.game.gameObjects.find((obj) => obj instanceof Player);
+        
 
+    }
+
+    update(deltaTime)
+    {
         const grounds = this.game.gameObjects.filter((obj) => obj instanceof Ground);
-        for (const ground of grounds)
-        {
-            if (physics.isColliding(ground.getComponent(Physics))) {
-                if (!this.isJumping) {
-                physics.velocity.y = 0;
-                physics.acceleration.y = 0;
-                this.y = ground.y - this.renderer.height;
-                this.isOnPlatform = true;
-                }
-            }
-        }
+        
+    
+    }
+
+    collideGround()
+    {
+        
     }
 
 

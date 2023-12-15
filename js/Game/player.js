@@ -20,6 +20,8 @@ class Player extends GameObject {
     this.addComponent(this.renderer);
     this.addComponent(new Physics({ x: 0, y: 0 }, { x: 0, y: 0 })); // Add physics
     this.addComponent(new Input()); // Add input for handling user input
+    this.addComponent(new PlayerCollision());
+
     // Initialize all the player specific properties
     this.direction = 1;
     this.lives = 3;
@@ -142,7 +144,7 @@ class Player extends GameObject {
     }
   
 
-    playerCollision.collideGround(deltaTime);
+    
 
     // Check if player has fallen off the bottom of the screen
     if (this.y > this.game.canvas.height) {
