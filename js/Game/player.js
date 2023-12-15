@@ -6,6 +6,8 @@ import Input from '../engine/input.js';
 import { Images } from '../engine/resources.js';
 import Enemy from './enemy.js';
 import Platform from './platform.js';
+import PlayerCollision from './playerCollision.js';
+
 import Collectible from './collectible.js';
 import ParticleSystem from '../engine/particleSystem.js';
 
@@ -22,24 +24,32 @@ class Player extends GameObject {
     this.direction = 1;
     this.lives = 3;
     this.score = 0;
-    this.isOnPlatform = false;
+    this.isStandingOnSomething = false; //TODO recheck full
     this.isJumping = false;
     this.jumpForce = 350;
     this.jumpTime = 0.3;
     this.jumpTimer = 0;
     this.isInvulnerable = false;
 
-    //Time Lock - Spacebar ability
+    //Time Lock (teleport) - Spacebar ability
     this.isTimeLockOn = false;
     this.timeLockBuffer = 0;
     this.timeLockSaved = [];
     this.timeLockCooldown = 0;
+
+    //Shattered Time - Q "back" in time ability
+
+    //Shattered Time - E "forward" in time ability
+
+
+    //Key of Chronology - R ultimate ability
   }
 
   // The update function runs every frame and contains game logic
   update(deltaTime) {
     const physics = this.getComponent(Physics); // Get physics component
     const input = this.getComponent(Input); // Get input component
+    const playerCollision = this.getComponent(PlayerCollision);
     
     // Handle player movement
     if (input.isKeyDown("KeyD"))
@@ -131,6 +141,9 @@ class Player extends GameObject {
       }
     }
   
+
+    playerCollision.collideGround(deltaTime);
+
     // Check if player has fallen off the bottom of the screen
     if (this.y > this.game.canvas.height) {
       this.resetPlayerState();
