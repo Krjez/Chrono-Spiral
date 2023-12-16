@@ -45,6 +45,41 @@ class Physics extends Component {
     // Return the bounding box.
     return [left, right, top, bottom];
   }
+
+  //Better collision detection for objects standing on top of other objects (mainly meant for player)
+  isCollidingBottomCenter(otherPhysics)
+  {
+    const [left, right, top, bottom] = this.getBoundingBoxBottomCenter();
+    const [otherLeft, otherRight, otherTop, otherBottom] = otherPhysics.getBoundingBoxTopCenter();
+
+    return left < otherRight && right > otherLeft && top < otherBottom && bottom > otherTop;
+  }
+
+  getBoundingBoxBottomCenter()
+  {
+    //Same idea as the in-class, but the box is smaller and moved.
+    //10 times the height of object and positioned at the bottom. 80% of the width, centered in middle.
+    const renderer = this.gameObject.getComponent(Renderer);
+    const left = this.gameObject.x + (renderer.width * 0.1);
+    const right = this.gameObject.x + (renderer.width * 0.9);
+    const top = this.gameObject.y + (renderer.height * 0.9);
+    const bottom = this.gameObject.y + renderer.height;
+    // Return the box
+    return [left, right, top, bottom];
+  }
+
+  getBoundingBoxTopCenter()
+  {
+    //Same idea as the in-class, but the box is smaller and moved.
+    //10 times the height of object and positioned at the bottom. 80% of the width, centered in middle.
+    const renderer = this.gameObject.getComponent(Renderer);
+    const left = this.gameObject.x + (renderer.width * 0.1);
+    const right = this.gameObject.x + (renderer.width * 0.9);
+    const top = this.gameObject.y;
+    const bottom = this.gameObject.y + (renderer.width * 0.1);
+    // Return the box
+    return [left, right, top, bottom];
+  }
 }
 
 // The Physics class is then exported as the default export of this module.

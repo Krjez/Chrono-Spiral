@@ -26,7 +26,7 @@ class PlayerCollision extends Component
       this.isOnGround = false;
       const grounds = player.game.gameObjects.filter((obj) => obj instanceof Ground);
       for (const ground of grounds) {
-        if (player.getComponent(Physics).isColliding(ground.getComponent(Physics))) {
+        if (player.getComponent(Physics).isCollidingBottomCenter(ground.getComponent(Physics))) {
           this.isOnGround = true;
           player.getComponent(Physics).velocity.y = 0;
           player.getComponent(Physics).acceleration.y = 0;
@@ -41,7 +41,7 @@ class PlayerCollision extends Component
       this.isOnPlatform = false;
       const platforms = player.game.gameObjects.filter((obj) => obj instanceof Platform);
       for (const platform of platforms) {
-        if (player.getComponent(Physics).isColliding(platform.getComponent(Physics))) {
+        if (player.getComponent(Physics).isCollidingBottomCenter(platform.getComponent(Physics))) {
           this.isOnPlatform = true;
           player.getComponent(Physics).velocity.y = 0;
           player.getComponent(Physics).acceleration.y = 0;
