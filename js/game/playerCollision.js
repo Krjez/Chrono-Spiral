@@ -1,61 +1,41 @@
-import Component from "../engine/component.js";
-import Player from "./player.js";
-import Renderer from "../engine/renderer.js";
-import Ground from "./ground.js";
 import GameObject from "../engine/gameobject.js";
-import Game from "../engine/game.js";
+import Renderer from "../engine/renderer.js";
+import Physics from "../engine/physics.js";
+import Ground from "./ground.js";
+import Platform from "./platform.js";
 
 
-class PlayerCollision extends Component
+
+class PlayerCollision extends GameObject
 {
-    constructor(player = Player)
+    constructor(x, y)
     {
-        super();
-        this.player = player;
+        super(x, y);
+        this.addComponent(new Physics({ x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 }));
+        this.addComponent(new Renderer(50, 50));
         
+
+    }
+
+    update()
+    {
 
     }
 
     groundCollision()
     {
-      const isStandingOnSomething = false;
-      const grounds = Game.gameObjects.filter((obj) => obj instanceof Ground);
+     console.log("vd");
+
+      this.isOnGround = false;
+      const grounds = this.game.gameObjects.filter((obj) => obj instanceof Ground);
       for (const ground of grounds) {
-        if (physics.isColliding(ground.getComponent(Physics))) {
-          if (!this.isJumping) {
-            physics.velocity.y = 0;
-            physics.acceleration.y = 0;
-            this.y = ground.y - this.renderer.height;
-            this.isStandingOnSomething = true;
-          }
+        if (this.getComponent(Physics).isColliding(ground.getComponent(Physics))) {
+          this.isOnGround = true;
+      this.y = ground.y - this.renderer.height;
         }
       }
-      return 
+      return this.isOnGround;
     }
-
-    isColliding(otherObject)
-    {
-        // Get the bounding boxes of both game objects.
-        const [playerLeft, playerRight, playerTop, playerBottom] = this.getBoundingBox(player);
-        const [otherLeft, otherRight, otherTop, otherBottom] = otherObject.getBoundingBox(otherObject);
-    
-        // Check if the bounding boxes overlap. If they do, return true. If not, return false.
-        return playerLeft < otherRight && playerRight > otherLeft && playerTop < otherBottom && playerBottom > otherTop;
-      }
-
-
-    getBoundingBox(obj) {
-        // Get the Renderer component of the player to get its width and height.
-        const renderer = obj.gameObject.getComponent(Renderer);
-        // Calculate the left, right, top, and bottom edges of the player's bounding box.
-        const left = obj.gameObject.x;
-        const right = obj.gameObject.x + renderer.width;
-        const top = obj.gameObject.y;
-        const bottom = obj.gameObject.y + renderer.height;
-    
-        // Return the bounding box.
-        return [left, right, top, bottom];
-      }
 
 
 
