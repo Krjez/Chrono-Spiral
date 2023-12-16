@@ -25,20 +25,18 @@ class Level extends Game {
     this.camera.target = player;
 
     // Define the platform's width and the gap between platforms
-    //const platformWidth = 200;
-    //const gap = 100;
+    const platformWidth = 200;
+    const gap = 100;
 
     // Create platforms and add them to the game
-    //const platforms = [
-      //new Platform(0, this.canvas.height - 20, 1500, 20),
-      //new Platform(platformWidth + gap, this.canvas.height - 20, platformWidth, 20),
-      //new Platform(2 * (platformWidth + gap), this.canvas.height - 20, platformWidth, 20),
-      //new Platform(3 * (platformWidth + gap), this.canvas.height - 20, platformWidth, 20),
-      //new Platform(4 * (platformWidth + gap), this.canvas.height - 20, platformWidth, 20),
-    //];
-    //for (const platform of platforms) {
-    //  this.addGameObject(platform);
-    //}
+    const platforms = [
+      new Platform(300, this.canvas.height - 150, 70, 20),
+      new Platform(600, this.canvas.height - 300, 150, 20),
+     // new Platform(2 * (platformWidth + gap), this.canvas.height - 20, platformWidth, 20)
+    ];
+    for (const platform of platforms) {
+      this.addGameObject(platform);
+    }
 
     const grounds = [
       new Ground(0, this.canvas.height - 50, 2000, 30),

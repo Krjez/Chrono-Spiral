@@ -71,9 +71,10 @@ class Player extends GameObject {
     }
 
     // Handle player jumping
-    if (input.isKeyDown("KeyW") && this.isOnPlatform)
+    if (input.isKeyDown("KeyW") && this.isStandingOnSomething)
     {
       this.startJump();
+      console.log("jump start");
     }
 
     //Faster falling down - concept for later
@@ -130,21 +131,10 @@ class Player extends GameObject {
       }
     }
   
-    // Handle collisions with platforms
-    this.isOnPlatform = false;  // Reset this before checking collisions with platforms
-    const platforms = this.game.gameObjects.filter((obj) => obj instanceof Platform);
-    for (const platform of platforms) {
-      if (physics.isColliding(platform.getComponent(Physics))) {
-        if (!this.isJumping) {
-          physics.velocity.y = 0;
-          physics.acceleration.y = 0;
-          this.y = platform.y - this.renderer.height;
-          this.isOnPlatform = true;
-        }
-      }
+    if(!this.isJumping)
+    {
+      this.isStandingOnSomething = playerCollision.standingOnCollision(this);
     }
-
-    playerCollision.groundCollision(this);
 
     // Check if player has fallen off the bottom of the screen
     if (this.y > this.game.canvas.height) {
@@ -169,11 +159,11 @@ class Player extends GameObject {
   startJump()
   {
     // Initiate a jump if the player is on a platform
-    if (this.isOnPlatform) { 
+    if (this.isStandingOnSomething) { 
       this.isJumping = true;
       this.jumpTimer = this.jumpTime;
       this.getComponent(Physics).velocity.y = -this.jumpForce;
-      this.isOnPlatform = false;
+      this.isStandingOnSomething = false;
     }
   }
   
@@ -186,6 +176,7 @@ class Player extends GameObject {
     }
   }
 
+  //Saves the position to which player can return
   startTimeLock()
   {
     this.isTimeLockOn = true;
@@ -193,6 +184,7 @@ class Player extends GameObject {
 
   }
 
+  //Returns player to the saved position and starts cooldown
   timeLockActivation()
   {
     this.isTimeLockOn = false;
