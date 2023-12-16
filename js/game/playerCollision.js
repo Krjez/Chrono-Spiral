@@ -22,12 +22,43 @@ class PlayerCollision extends Component
     collectibleCollision(player)
     {
       const collectibles = player.game.gameObjects.filter((obj) => obj instanceof Collectible);
-      for (const collectible of collectibles) {
-        if (player.getComponent(Physics).isCollidingOmnidirectional(collectible.getComponent(Physics))) {
+      for (const collectible of collectibles)
+      {
+        if (player.getComponent(Physics).isCollidingOmnidirectional(collectible.getComponent(Physics)))
+        {
           player.score += collectible.value;
           player.emitCollectParticles(collectible);
           console.log(`Score: ${player.score}`);
           player.game.removeGameObject(collectible);
+        }
+      }
+    }
+
+    platformCollisionNotTop(player)
+    {
+      const platforms = player.game.gameObjects.filter((obj) => obj instanceof Platform);
+      for (const platform of platforms)
+      {
+        if (player.getComponent(Physics).isCollidingTop(platform.getComponent(Physics)))
+        {
+          player.getComponent(Physics).velocity.y = 0;
+          player.getComponent(Physics).acceleration.y = 0;
+          player.y = platform.y + platform.getComponent(Renderer).height;
+          console.log("collide on top");
+        }
+        if(player.getComponent(Physics).isCollidingLeft(platform.getComponent(Physics)))
+        {
+          player.getComponent(Physics).velocity.x = 0;
+          player.getComponent(Physics).acceleration.x = 0;
+          player.x = platform.x + platform.getComponent(Renderer).width;
+          console.log("collide on left");
+        }
+        if(player.getComponent(Physics).isCollidingRight(platform.getComponent(Physics)))
+        {
+          player.getComponent(Physics).velocity.x = 0;
+          player.getComponent(Physics).acceleration.x = 0;
+          player.x = platform.x - player.getComponent(Renderer).width;
+          console.log("collide on right");
         }
       }
     }
@@ -41,12 +72,14 @@ class PlayerCollision extends Component
     {
       this.isOnGround = false;
       const grounds = player.game.gameObjects.filter((obj) => obj instanceof Ground);
-      for (const ground of grounds) {
-        if (player.getComponent(Physics).isCollidingBottom(ground.getComponent(Physics))) {
+      for (const ground of grounds)
+      { 
+        if (player.getComponent(Physics).isCollidingBottom(ground.getComponent(Physics)))
+        {
           this.isOnGround = true;
           player.getComponent(Physics).velocity.y = 0;
           player.getComponent(Physics).acceleration.y = 0;
-          player.y = ground.y - player.renderer.height;
+          player.y = ground.y - player.getComponent(Renderer).height;
         }
       }
       return this.isOnGround;
@@ -56,13 +89,14 @@ class PlayerCollision extends Component
     {
       this.isOnPlatform = false;
       const platforms = player.game.gameObjects.filter((obj) => obj instanceof Platform);
-      for (const platform of platforms) {
-        if (player.getComponent(Physics).isCollidingTop(platform.getComponent(Physics))) {
+      for (const platform of platforms)
+      {
+        if (player.getComponent(Physics).isCollidingBottom(platform.getComponent(Physics)))
+        {
           this.isOnPlatform = true;
           player.getComponent(Physics).velocity.y = 0;
           player.getComponent(Physics).acceleration.y = 0;
-          //player.y = platform.y - player.renderer.height;
-          player.y = platform.y + platform.getComponent(Renderer).height;
+          player.y = platform.y - player.renderer.height;
         }
       }
       return this.isOnPlatform;

@@ -122,6 +122,9 @@ class Player extends GameObject {
       }
     }
   
+
+    playerCollision.platformCollisionNotTop(this);
+
     if(!this.isJumping)
     {
       this.isStandingOnSomething = playerCollision.standingOnCollision(this);
@@ -200,13 +203,6 @@ class Player extends GameObject {
         this.isInvulnerable = false;
       }, 2000);
     }
-  }
-
-  collect(collectible) {
-    // Handle collectible pickup
-    this.score += collectible.value;
-    console.log(`Score: ${this.score}`);
-    this.emitCollectParticles(collectible);
   }
 
   emitCollectParticles() {
