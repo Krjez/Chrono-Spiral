@@ -122,12 +122,13 @@ class Player extends GameObject {
       }
     }
   
+    //All collisions with static objects - platforms, ground, walls etc
+    playerCollision.solidCollisions(this);
 
-    playerCollision.platformCollisionNotTop(this);
-
+    //Check if the player is standing on something
     if(!this.isJumping)
     {
-      this.isStandingOnSomething = playerCollision.standingOnCollision(this);
+      this.isStandingOnSomething = playerCollision.standingOnCollisions(this);
     }
 
     // Check if player has fallen off the bottom of the screen

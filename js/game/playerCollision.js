@@ -34,6 +34,34 @@ class PlayerCollision extends Component
       }
     }
 
+    solidCollisions(player)
+    {
+      this.platformCollisionNotTop(player);
+      this.groundCollisionSides(player);
+    }
+
+    groundCollisionSides(player)
+    {
+      const grounds = player.game.gameObjects.filter((obj) => obj instanceof Ground);
+      for (const ground of grounds)
+      {
+        if(player.getComponent(Physics).isCollidingLeft(ground.getComponent(Physics)))
+        {
+          player.getComponent(Physics).velocity.x = 0;
+          player.getComponent(Physics).acceleration.x = 0;
+          player.x = ground.x + ground.getComponent(Renderer).width;
+          console.log("collide on left");
+        }
+        if(player.getComponent(Physics).isCollidingRight(ground.getComponent(Physics)))
+        {
+          player.getComponent(Physics).velocity.x = 0;
+          player.getComponent(Physics).acceleration.x = 0;
+          player.x = ground.x - player.getComponent(Renderer).width;
+          console.log("collide on right");
+        }
+      }
+    }
+
     platformCollisionNotTop(player)
     {
       const platforms = player.game.gameObjects.filter((obj) => obj instanceof Platform);
@@ -44,26 +72,23 @@ class PlayerCollision extends Component
           player.getComponent(Physics).velocity.y = 0;
           player.getComponent(Physics).acceleration.y = 0;
           player.y = platform.y + platform.getComponent(Renderer).height;
-          console.log("collide on top");
         }
         if(player.getComponent(Physics).isCollidingLeft(platform.getComponent(Physics)))
         {
           player.getComponent(Physics).velocity.x = 0;
           player.getComponent(Physics).acceleration.x = 0;
           player.x = platform.x + platform.getComponent(Renderer).width;
-          console.log("collide on left");
         }
         if(player.getComponent(Physics).isCollidingRight(platform.getComponent(Physics)))
         {
           player.getComponent(Physics).velocity.x = 0;
           player.getComponent(Physics).acceleration.x = 0;
           player.x = platform.x - player.getComponent(Renderer).width;
-          console.log("collide on right");
         }
       }
     }
 
-    standingOnCollision(player)
+    standingOnCollisions(player)
     {
       return this.groundCollision(player) || this.platformCollision(player);
     }
