@@ -1,37 +1,31 @@
-import GameObject from "../engine/gameobject.js";
-import Renderer from "../engine/renderer.js";
+import Component from "../engine/component.js";
 import Physics from "../engine/physics.js";
+
+import Player from "./player.js";
 import Ground from "./ground.js";
 import Platform from "./platform.js";
 
 
 
-class PlayerCollision extends GameObject
+
+class PlayerCollision extends Component
 {
-    constructor(x, y)
+    constructor()
     {
-        super(x, y);
-        this.addComponent(new Physics({ x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 }));
-        this.addComponent(new Renderer(50, 50));
+      super();
         
 
     }
 
-    update()
+    groundCollision(player)
     {
-
-    }
-
-    groundCollision()
-    {
-     console.log("vd");
-
       this.isOnGround = false;
-      const grounds = this.game.gameObjects.filter((obj) => obj instanceof Ground);
+      const grounds = player.game.gameObjects.filter((obj) => obj instanceof Ground);
       for (const ground of grounds) {
-        if (this.getComponent(Physics).isColliding(ground.getComponent(Physics))) {
+        if (player.getComponent(Physics).isColliding(ground.getComponent(Physics))) {
           this.isOnGround = true;
-      this.y = ground.y - this.renderer.height;
+          console.log("on ground");
+          player.getComponent(Physics).x = 0;
         }
       }
       return this.isOnGround;

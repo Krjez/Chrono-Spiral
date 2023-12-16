@@ -20,6 +20,7 @@ class Player extends GameObject {
     this.addComponent(this.renderer);
     this.addComponent(new Physics({ x: 0, y: 0 }, { x: 0, y: 0 })); // Add physics
     this.addComponent(new Input()); // Add input for handling user input
+    this.addComponent(new PlayerCollision());
 
     // Initialize all the player specific properties
     this.direction = 1;
@@ -50,13 +51,8 @@ class Player extends GameObject {
   update(deltaTime) {
     const physics = this.getComponent(Physics); // Get physics component
     const input = this.getComponent(Input); // Get input component
-    //console.log("before add");
-    if(this.game.gameObjects.filter((obj) => obj instanceof PlayerCollision) == false)
-    {
-      this.game.addGameObject(new PlayerCollision(this.x, this.y));
-      console.log("added in one plcoll");
-    }
-    const playerCollision = this.game.gameObjects.find((obj) => obj instanceof PlayerCollision);
+
+    const playerCollision = this.getComponent(PlayerCollision);
     
     // Handle player movement
     if (input.isKeyDown("KeyD"))
@@ -148,15 +144,7 @@ class Player extends GameObject {
       }
     }
 
-    playerCollision.x = this.x;
-    playerCollision.y = this.y;
-
-    if(playerCollision.groundCollision())
-    {
-      physics.velocity.y = 0;
-      physics.acceleration.y = 0;
-      this.y = ground.y - this.renderer.height;
-    }
+    playerCollision.groundCollision(this);
 
     // Check if player has fallen off the bottom of the screen
     if (this.y > this.game.canvas.height) {
