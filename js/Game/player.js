@@ -5,10 +5,8 @@ import Physics from '../engine/physics.js';
 import Input from '../engine/input.js';
 import { Images } from '../engine/resources.js';
 import Enemy from './enemy.js';
-import Platform from './platform.js';
 import PlayerCollision from './playerCollision.js';
 
-import Collectible from './collectible.js';
 import ParticleSystem from '../engine/particleSystem.js';
 
 // Defining a class Player that extends GameObject
@@ -16,7 +14,7 @@ class Player extends GameObject {
   // Constructor initializes the game object and add necessary components
   constructor(x, y) {
     super(x, y); // Call parent's constructor
-    this.renderer = new Renderer('blue', 50, 50, Images.playerIdle); // Add renderer
+    this.renderer = new Renderer('blue', 66, 112, Images.playerIdle); // Add renderer
     this.addComponent(this.renderer);
     this.addComponent(new Physics({ x: 0, y: 0 }, { x: 0, y: 0 })); // Add physics
     this.addComponent(new Input()); // Add input for handling user input
@@ -114,14 +112,7 @@ class Player extends GameObject {
     
     
 
-    // Handle collisions with collectibles
-    const collectibles = this.game.gameObjects.filter((obj) => obj instanceof Collectible);
-    for (const collectible of collectibles) {
-      if (physics.isColliding(collectible.getComponent(Physics))) {
-        this.collect(collectible);
-        this.game.removeGameObject(collectible);
-      }
-    }
+    playerCollision.collectibleCollision(this);
   
     // Handle collisions with enemies
     const enemies = this.game.gameObjects.filter((obj) => obj instanceof Enemy);

@@ -47,39 +47,93 @@ class Physics extends Component {
   }
 
   //Better collision detection for objects standing on top of other objects (mainly meant for player)
-  isCollidingBottomCenter(otherPhysics)
+  isCollidingBottom(otherPhysics)
   {
-    const [left, right, top, bottom] = this.getBoundingBoxBottomCenter();
-    const [otherLeft, otherRight, otherTop, otherBottom] = otherPhysics.getBoundingBoxTopCenter();
+    const [left, right, top, bottom] = this.getBoundingBoxBottom();
+    const [otherLeft, otherRight, otherTop, otherBottom] = otherPhysics.getBoundingBoxTop();
 
     return left < otherRight && right > otherLeft && top < otherBottom && bottom > otherTop;
   }
 
-  getBoundingBoxBottomCenter()
+  isCollidingTop(otherPhysics)
   {
-    //Same idea as the in-class, but the box is smaller and moved.
-    //10 times the height of object and positioned at the bottom. 80% of the width, centered in middle.
+    const [left, right, top, bottom] = this.getBoundingBoxTop();
+    const [otherLeft, otherRight, otherTop, otherBottom] = otherPhysics.getBoundingBoxBottom();
+
+    return left < otherRight && right > otherLeft && top < otherBottom && bottom > otherTop;
+  }
+
+  isCollidingLeft(otherPhysics)
+  {
+    const [left, right, top, bottom] = this.getBoundingBoxLeft();
+    const [otherLeft, otherRight, otherTop, otherBottom] = otherPhysics.getBoundingBoxRight();
+
+    return left < otherRight && right > otherLeft && top < otherBottom && bottom > otherTop;
+  }
+
+  isCollidingRight(otherPhysics)
+  {
+    const [left, right, top, bottom] = this.getBoundingBoxRight();
+    const [otherLeft, otherRight, otherTop, otherBottom] = otherPhysics.getBoundingBoxLeft();
+
+    return left < otherRight && right > otherLeft && top < otherBottom && bottom > otherTop;
+  }
+
+  isCollidingOmnidirectional(otherPhysics)
+  {
+    return this.isCollidingBottom(otherPhysics) || this.isCollidingTop(otherPhysics) || this.isCollidingLeft(otherPhysics) || this.isCollidingRight(otherPhysics);
+  }
+
+  //Same idea as the in-class variant, but all the boxes are smaller and moved.
+  //They are 90% of the original lenght on the side where they are supposed to touch the other object and centered.
+  //And they are 20% of the original lenght on the orthogonal (horizontal/vertical) axis and moved to the object's border
+  getBoundingBoxBottom()
+  {
     const renderer = this.gameObject.getComponent(Renderer);
-    const left = this.gameObject.x + (renderer.width * 0.1);
-    const right = this.gameObject.x + (renderer.width * 0.9);
-    const top = this.gameObject.y + (renderer.height * 0.9);
+
+    const left = this.gameObject.x + (renderer.width * 0.05);
+    const right = this.gameObject.x + (renderer.width * 0.95);
+    const top = this.gameObject.y + (renderer.height * 0.8);
     const bottom = this.gameObject.y + renderer.height;
+
+    return [left, right, top, bottom];
+  }
+
+  getBoundingBoxTop()
+  {
+    const renderer = this.gameObject.getComponent(Renderer);
+
+    const left = this.gameObject.x + (renderer.width * 0.05);
+    const right = this.gameObject.x + (renderer.width * 0.95);
+    const top = this.gameObject.y;
+    const bottom = this.gameObject.y + (renderer.height * 0.2);
+
+    return [left, right, top, bottom];
+  }
+
+  getBoundingBoxLeft()
+  {
+    const renderer = this.gameObject.getComponent(Renderer);
+
+    const left = this.gameObject.x;
+    const right = this.gameObject.x + (renderer.width * 0.2);
+    const top = this.gameObject.y + (renderer.height * 0.05);
+    const bottom = this.gameObject.y + (renderer.height * 0.95);
+
+    return [left, right, top, bottom];
+  }
+
+  getBoundingBoxRight()
+  {
+    const renderer = this.gameObject.getComponent(Renderer);
+    const left = this.gameObject.x + (renderer.width * 0.8);
+    const right = this.gameObject.x + renderer.width;
+    const top = this.gameObject.y + (renderer.height * 0.05);
+    const bottom = this.gameObject.y + (renderer.height * 0.95);
     // Return the box
     return [left, right, top, bottom];
   }
 
-  getBoundingBoxTopCenter()
-  {
-    //Same idea as the in-class, but the box is smaller and moved.
-    //10 times the height of object and positioned at the bottom. 80% of the width, centered in middle.
-    const renderer = this.gameObject.getComponent(Renderer);
-    const left = this.gameObject.x + (renderer.width * 0.1);
-    const right = this.gameObject.x + (renderer.width * 0.9);
-    const top = this.gameObject.y;
-    const bottom = this.gameObject.y + (renderer.width * 0.1);
-    // Return the box
-    return [left, right, top, bottom];
-  }
 }
 
 // The Physics class is then exported as the default export of this module.

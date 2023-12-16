@@ -13,7 +13,7 @@ const AudioFiles = {
 };
 
 // Set the source of the player image.
-Images.playerIdle.src = "./resources/images/player/idle/idle1.png"; // Update the image path
+Images.playerIdle.src = "./resources/images/player/idle/idle.png"; // Update the image path
 Images.playerJump.src = "./resources/images/player/jump/jump.png";
 
 // Set the source of the enemy image.
