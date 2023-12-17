@@ -32,14 +32,14 @@ class Player extends GameObject
 
     //Time Lock (teleport) - Spacebar ability
     this.isTimeLockOn = false;
-    this.timeLockBuffer = 0;
     this.timeLockSaved = [];
-    this.timeLockCooldown = 0;
+    this.timeLockBuffer = 0;
+    this.timeLockOnCooldown = false;
 
     //Shattered Time - Q "back" in time ability
-
     //Shattered Time - E "forward" in time ability
-
+    this.shatteredTimeOnCooldown = false;
+    this.shatteredTimeBuffer = 0;
 
     //Key of Chronology - R ultimate ability
   }
@@ -51,12 +51,12 @@ class Player extends GameObject
     const input = this.getComponent(Input); // Get input component    
 
     //All collisions necessary to update every frame - almost all gameObjects
-    this.playerCollision.continuousCollisions(this);
+    this.playerCollision.continuousCollisions(this, this.game.time);
 
     //Check if the player is standing on something, doesn't trigger when launching a jump
     if(!this.isJumping)
     {
-      this.isStandingOnSomething = this.playerCollision.standingOnCollisions(this);
+      this.isStandingOnSomething = this.playerCollision.standingOnCollisions(this, this.game.time);
     }
 
     //Sideways movement (A,D) and the "passive ability" Feather Fall (S)
@@ -115,11 +115,9 @@ class Player extends GameObject
   handlePlayerAbilities(input)
   {
     //Time Lock
-    if(input.isKeyDown("Space") && !this.timeLockBuffer > 0 && !this.timeLockCooldown > 0)
+    if(input.isKeyDown("Space") && !this.timeLockOnCooldown && !this.timeLockBuffer > 0)
     {
       this.timeLockBuffer = 30;
-      //small delay so the functions won't call each other repeatedly in consecutive frames
-      //as the player holds space for longer than just 1 frame
       if(!this.isTimeLockOn)
       {
        this.startTimeLock();
@@ -131,13 +129,23 @@ class Player extends GameObject
     }
 
     //Shattered Time
-    if(input.isKeyDown("KeyQ") && this.game.time > 1)
+    if(input.isKeyDown("KeyQ") && this.game.time > 1 && !this.shatteredTimeBuffer > 0 && !this.shatteredTimeOnCooldown)
     {
       this.game.time -= 1;
+      this.shatteredTimeBuffer = 10;
+      this.shatteredTimeOnCooldown = true;
+      setTimeout(() => {
+        this.shatteredTimeOnCooldown = false;
+      }, 10000);
     }
-    if(input.isKeyDown("KeyE") && this.game.time < 3)
+    if(input.isKeyDown("KeyE") && this.game.time < 3 && !this.shatteredTimeBuffer > 0 && !this.shatteredTimeOnCooldown)
     {
       this.game.time += 1;
+      this.shatteredTimeBuffer = 10;
+      this.shatteredTimeOnCooldown = true;
+      setTimeout(() => {
+        this.shatteredTimeOnCooldown = false;
+      }, 10000);
     }
 
     //TODO Key of Chronology
@@ -207,20 +215,22 @@ class Player extends GameObject
     this.getComponent(Physics).velocity.x = this.timeLockSaved[3];
     this.getComponent(Physics).velocity.y = this.timeLockSaved[4];
 
-    this.timeLockCooldown = 150;
+    this.timeLockOnCooldown = true;
+    setTimeout(() => {
+      this.timeLockOnCooldown = false;
+    }, 5000);
+    //5 seconds cooldown
   }
 
   abilitiesCountdowns()
   {
-    //TODO recheck use of setTimeout
     if(this.timeLockBuffer > 0)
     {
       this.timeLockBuffer -= 1;
     }
-
-    if(this.timeLockCooldown > 0)
+    if(this.shatteredTimeBuffer > 0)
     {
-      this.timeLockCooldown -= 1;
+      this.shatteredTimeBuffer -= 1;
     }
   }
 

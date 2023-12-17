@@ -30,11 +30,11 @@ class Level extends Game
     //Platforms across the level with array usage
     const platforms =
     [
-      new Platform(220, 480, 80),
-      new Platform(560, 590, 400),
-      new Platform(200, 700, 150),
-      new Platform(1150, 630, 180),
-      new Platform(1300, 500, 150)
+      new Platform(220, 480, 80, 2),
+      new Platform(560, 590, 400, 1),
+      new Platform(200, 700, 150, 1),
+      new Platform(1150, 630, 180, 2),
+      new Platform(1300, 500, 150, 3)
     ];
     for (const platform of platforms)
     {

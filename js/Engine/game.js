@@ -2,7 +2,8 @@
 import Camera from './camera.js';
 
 // The Game class is responsible for setting up and managing the main game loop.
-class Game {
+class Game
+{
   // The constructor initializes a new instance of the Game class.
   constructor(canvasId)
   {
@@ -25,15 +26,16 @@ class Game {
     // Instantiate a new camera without a target and with dimensions equal to the canvas size.
     this.camera = new Camera(null, this.canvas.width, this.canvas.height);
     //Adds "time", a state of the game - 1/2/3 for past/present/future
-    //Objects with time 0 are rendered always
+    //Objects with time 0 are rendered always, game starting in present (2)
     //Then only the objects in the current "time" are rendered
     this.time = 2;
   }
 
   // This method resizes the canvas to fill the window, with a small margin.
-  resizeCanvas() {
-    this.canvas.width = window.innerWidth - 50;
-    this.canvas.height = window.innerHeight - 50;
+  resizeCanvas()
+  {
+    this.canvas.width = window.innerWidth - 5;
+    this.canvas.height = window.innerHeight - 5;
   }
 
   // This method starts the game loop.
@@ -48,22 +50,21 @@ class Game {
     this.deltaTime = (currentFrameTime - this.lastFrameTime) / 1000;
     // Update the last frame time.
     this.lastFrameTime = currentFrameTime;
-
-    // Update all game objects and the camera.
     this.update();
     this.camera.update();
-    // Draw the game objects on the canvas.
     this.draw();
-
-    // Request the next animation frame, which will call this method again.
     requestAnimationFrame((timestamp) => this.gameLoop(timestamp));
   }
 
-  // This method updates all the game objects.
-  update() {
-    // Call each game object's update method with the delta time.
-    for (const gameObject of this.gameObjects) {
-      gameObject.update(this.deltaTime);
+  update()
+  {
+    // Call update on each game object in the current "time"
+    for (const gameObject of this.gameObjects)
+    {
+      if(gameObject.time == 0 || gameObject.time === this.time)
+      {
+        gameObject.update(this.deltaTime);
+      }
     }
     // Filter out game objects that are marked for removal.
     this.gameObjects = this.gameObjects.filter(obj => !this.gameObjectsToRemove.includes(obj));

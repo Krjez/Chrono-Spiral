@@ -8,7 +8,7 @@ class Enemy extends GameObject {
   constructor(x, y, type)
   {
     super(x, y);
-    //Enemy golem - big slow monster, hard-hitting
+    //Enemy golem - big slow flying monster, hard-hitting
     if(type === "golem")
     {
       this.addComponent(new Renderer('green', 90, 90, Images.enemyGolem));
@@ -17,7 +17,7 @@ class Enemy extends GameObject {
       this.movementDistance = 0;
       this.movementLimit = 300;
     }
-    //Grim Reaper - smaller, flying, can move through platforms, will follow player in vicinity
+    //Grim Reaper - smaller, can move through platforms, will follow player in vicinity
     if(type == "reaper")
     {
       this.addComponent(new Renderer('green', 30, 60, Images.enemyReaper));
@@ -25,7 +25,7 @@ class Enemy extends GameObject {
       this.type = type;
       this.movementDistance = 0;
       this.movementLimit = 100;
-    }
+    } 
     //Variables related to enemy's movement
     this.direction = 1;
     this.movingRight = true;
