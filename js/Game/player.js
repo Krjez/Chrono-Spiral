@@ -21,7 +21,7 @@ class Player extends GameObject {
     this.addComponent(new PlayerCollision());
 
     // Initialize all the player specific properties
-    this.direction = 1;
+    this.direction = -1;
     this.lives = 3;
     this.score = 0;
     this.isStandingOnSomething = false; //TODO recheck full
@@ -131,8 +131,8 @@ class Player extends GameObject {
       this.isStandingOnSomething = playerCollision.standingOnCollisions(this);
     }
 
-    // Check if player has fallen off the bottom of the screen
-    if (this.y > this.game.canvas.height) {
+    // Check if player has fallen off the bottom of the ground borders
+    if (this.y > 1300) {
       this.resetPlayerState();
     }
 
@@ -214,11 +214,11 @@ class Player extends GameObject {
 
   resetPlayerState() {
     // Reset the player's state, repositioning it and nullifying movement
-    this.x = this.game.canvas.width / 2;
-    this.y = this.game.canvas.height / 2;
+    this.x = 300;
+    this.y = 900;
     this.getComponent(Physics).velocity = { x: 0, y: 0 };
     this.getComponent(Physics).acceleration = { x: 0, y: 0 };
-    this.direction = 1;
+    this.direction = -1;
     this.isOnPlatform = false;
     this.isJumping = false;
     this.jumpTimer = 0;

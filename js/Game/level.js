@@ -15,7 +15,8 @@ class Level extends Game {
     super(canvasId);
     
     // Create a player object and add it to the game
-    const player = new Player(this.canvas.width / 2, this.canvas.height / 2);
+   // const player = new Player(this.canvas.width / 2, this.canvas.height / 2);
+    const player = new Player(300, 900);
     this.addGameObject(player);
     
     // Add the player UI object to the game
@@ -38,10 +39,17 @@ class Level extends Game {
       this.addGameObject(platform);
     }
 
+    //The whole level is bordered by "grounds", inside area is 3000x1000 pixels
+    //Inside area top-left corner is in 100x100, bottom-right in 3100x1100
     const grounds = [
-      new Ground(0, this.canvas.height - 50, 3000, 50),
-      new Ground(200, this.canvas.height + 200, 50, -900),
-      new Ground(2000, this.canvas.height + 200, 50, -900)
+      //bottom of the level
+      new Ground(0, 1100, 3200, 50),
+      //top of the level
+      new Ground(0, 50, 3200, 50),
+      //left side wall
+      new Ground(50, 0, 50, 1200),
+      //right side wall
+      new Ground(3100, 0, 50, 1200)
     ];
     for(const ground of grounds)
     {
@@ -54,9 +62,9 @@ class Level extends Game {
     //this.addGameObject(new Enemy(2 * (platformWidth + gap) + 50, this.canvas.height - 90));
 
     // Create collectibles and add them to the game
-    this.addGameObject(new Collectible(250, this.canvas.height - 100, 20, 20));
-    this.addGameObject(new Collectible(450, this.canvas.height - 100, 20, 20));
-    this.addGameObject(new Collectible(650, this.canvas.height - 100, 20, 20));
+    this.addGameObject(new Collectible(250, 1000, 20, 20));
+    this.addGameObject(new Collectible(600, 800, 20, 20));
+    this.addGameObject(new Collectible(1000, 1000, 20, 20));
   }
   
 }

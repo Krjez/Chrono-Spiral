@@ -2,7 +2,6 @@ import Component from "../engine/component.js";
 import Physics from "../engine/physics.js";
 import Renderer from "../engine/renderer.js";
 
-import Player from "./player.js";
 import Ground from "./ground.js";
 import Platform from "./platform.js";
 import Collectible from "./collectible.js";
@@ -45,19 +44,26 @@ class PlayerCollision extends Component
       const grounds = player.game.gameObjects.filter((obj) => obj instanceof Ground);
       for (const ground of grounds)
       {
-        if(player.getComponent(Physics).isCollidingLeft(ground.getComponent(Physics)))
+        if (player.getComponent(Physics).isCollidingTop(ground.getComponent(Physics)))
         {
-          player.getComponent(Physics).velocity.x = 0;
-          player.getComponent(Physics).acceleration.x = 0;
-          player.x = ground.x + ground.getComponent(Renderer).width;
-          console.log("collide on left");
+          player.getComponent(Physics).velocity.y = 0;
+          player.getComponent(Physics).acceleration.y = 0;
+          player.y = ground.y + ground.getComponent(Renderer).height;
+          console.log("touched bottom of ground");
         }
-        if(player.getComponent(Physics).isCollidingRight(ground.getComponent(Physics)))
+        if (player.getComponent(Physics).isCollidingRight(ground.getComponent(Physics)))
         {
           player.getComponent(Physics).velocity.x = 0;
           player.getComponent(Physics).acceleration.x = 0;
           player.x = ground.x - player.getComponent(Renderer).width;
-          console.log("collide on right");
+          console.log("touched ground on left");
+        }
+        if (player.getComponent(Physics).isCollidingLeft(ground.getComponent(Physics)))
+        {
+          player.getComponent(Physics).velocity.x = 0;
+          player.getComponent(Physics).acceleration.x = 0;
+          player.x = ground.x + ground.getComponent(Renderer).width;
+          console.log("touched ground on right");
         }
       }
     }
@@ -72,18 +78,21 @@ class PlayerCollision extends Component
           player.getComponent(Physics).velocity.y = 0;
           player.getComponent(Physics).acceleration.y = 0;
           player.y = platform.y + platform.getComponent(Renderer).height;
+          console.log("touched bottom of platform");
         }
         if(player.getComponent(Physics).isCollidingLeft(platform.getComponent(Physics)))
         {
           player.getComponent(Physics).velocity.x = 0;
           player.getComponent(Physics).acceleration.x = 0;
           player.x = platform.x + platform.getComponent(Renderer).width;
+          console.log("touched platform on left");
         }
         if(player.getComponent(Physics).isCollidingRight(platform.getComponent(Physics)))
         {
           player.getComponent(Physics).velocity.x = 0;
           player.getComponent(Physics).acceleration.x = 0;
           player.x = platform.x - player.getComponent(Renderer).width;
+          console.log("touched platform on right");
         }
       }
     }
