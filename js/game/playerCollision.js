@@ -48,7 +48,7 @@ class PlayerCollision extends Component
 
     emitCollectParticles(player, collectible)
     {
-      // Create a particle system at the player's position when a collectible is collected
+      // Create a particle system at the (changed:) collectibles's position when it is is collected
       const particleSystem = new ParticleSystem(collectible.x, collectible.y, 'yellow', 20, 1, 0.5);
       player.game.addGameObject(particleSystem);
     }

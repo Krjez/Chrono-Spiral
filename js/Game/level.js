@@ -1,10 +1,10 @@
 import Game from '../engine/game.js';
 import Player from './player.js';
-//import Enemy from './enemy.js';
 import PlayerUI from './playerUI.js';
 import Platform from './platform.js';
 import Ground from './ground.js';
 import Collectible from './collectible.js';
+import Enemy from './enemy.js';
 
 // Define a class Level that extends the Game class from the engine
 class Level extends Game {
@@ -16,7 +16,7 @@ class Level extends Game {
     
     // Create a player object and add it to the game
    // const player = new Player(this.canvas.width / 2, this.canvas.height / 2);
-    const player = new Player(300, 900);
+    const player = new Player(300, 650);
     this.addGameObject(player);
     
     // Add the player UI object to the game
@@ -27,25 +27,25 @@ class Level extends Game {
 
     // Create platforms and add them to the game
     const platforms = [
-      new Platform(500, 950, 70, 20),
-      new Platform(800, 800, 150, 20),
-      new Platform(200, 700, 150, 30)
+      new Platform(220, 480, 80, 20),
+      new Platform(560, 590, 100, 20),
+      new Platform(200, 700, 150, 20)
     ];
     for (const platform of platforms) {
       this.addGameObject(platform);
     }
 
-    //The whole level is bordered by "grounds", inside area is 3000x1000 pixels
-    //Inside area top-left corner is in 100x100, bottom-right in 3100x1100
+    //The whole level is bordered by "grounds", inside area is 1500x700 pixels
+    //Inside area top-left corner is in 100x100, bottom-right in 1600x800
     const grounds = [
       //bottom of the level
-      new Ground(0, 1100, 3200, 50),
+      new Ground(0, 800, 1700, 50),
       //top of the level
-      new Ground(0, 50, 3200, 50),
+      new Ground(0, 50, 1700, 50),
       //left side wall
-      new Ground(50, 0, 50, 1200),
+      new Ground(50, 0, 50, 900),
       //right side wall
-      new Ground(3100, 0, 50, 1200)
+      new Ground(1600, 0, 50, 900)
     ];
     for(const ground of grounds)
     {
@@ -58,9 +58,9 @@ class Level extends Game {
     //this.addGameObject(new Enemy(2 * (platformWidth + gap) + 50, this.canvas.height - 90));
 
     // Create collectibles and add them to the game
-    this.addGameObject(new Collectible(270, 650, 20, 20));
-    this.addGameObject(new Collectible(600, 800, 20, 20));
-    this.addGameObject(new Collectible(1000, 1000, 20, 20));
+    this.addGameObject(new Collectible(240, 420, 20, 20, "coin"));
+    this.addGameObject(new Collectible(600, 500, 20, 20, "chest"));
+    this.addGameObject(new Collectible(1000, 450, 20, 20, "coin"));
   }
   
 }

@@ -2,7 +2,9 @@
 const Images = {
   playerIdle: new Image(), // The Image instance for the player.
   playerJump: new Image(), //Testing WIP
-  enemy: new Image(), // The Image instance for the enemy.
+  collectibleCoin: new Image(),
+  collectibleChest: new Image(),
+  enemyGolem: new Image(),
 };
 
 // Create an AudioFiles object to hold the file paths of the audio resources.
@@ -13,11 +15,15 @@ const AudioFiles = {
 };
 
 // Set the source of the player image.
-Images.playerIdle.src = "./resources/images/player/idle/idle.png"; // Update the image path
-Images.playerJump.src = "./resources/images/player/jump/jump.png";
+Images.playerIdle.src = "./resources/images/player/idle.png"; // Update the image path
+//Images.playerJump.src = "./resources/images/player/jump/jump.png";
+
+//Collectibles images
+Images.collectibleCoin.src = "./resources/images/collectibles/coin.png";
+Images.collectibleChest.src = "./resources/images/collectibles/chest.png";
 
 // Set the source of the enemy image.
-Images.enemy.src = './resources/images/enemy/enemy.png'; // Update the image path
+Images.enemyGolem.src = './resources/images/enemy/golem.png'; // Update the image path
 
 // Export the Images and AudioFiles objects so they can be imported and used in other modules.
 export { Images, AudioFiles };

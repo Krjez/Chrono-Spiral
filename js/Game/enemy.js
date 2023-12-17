@@ -67,12 +67,6 @@ class Enemy extends GameObject {
       }
     }
 
-    // Check if the enemy is colliding with the player
-    const player = this.game.gameObjects.find(obj => obj instanceof Player);
-    if (physics.isColliding(player.getComponent(Physics))) {
-      player.collidedWithEnemy();
-    }
-
     // Check if the enemy is colliding with any platforms
     const platforms = this.game.gameObjects.filter(obj => obj instanceof Platform);
     this.isOnPlatform = false;

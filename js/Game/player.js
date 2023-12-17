@@ -11,7 +11,7 @@ class Player extends GameObject
   constructor(x, y)
   {
     super(x, y); // Call parent's constructor
-    this.renderer = new Renderer('blue', 66, 112, Images.playerIdle); // Add renderer
+    this.renderer = new Renderer('blue', 60, 100, Images.playerIdle); // Add renderer
     this.addComponent(this.renderer);
     //Adds playerCollision. Component for handling all player-based collisions
     this.playerCollision = new PlayerCollision();
@@ -21,12 +21,12 @@ class Player extends GameObject
     
 
     // Initialize all the player specific properties
-    this.direction = -1;
+    this.direction = 1;
     this.lives = 3;
     this.score = 0;
     this.isStandingOnSomething = false; //TODO recheck full
     this.isJumping = false;
-    this.jumpForce = 350;
+    this.jumpForce = 300;
     this.jumpTime = 0.3;
     this.jumpTimer = 0;
     this.isInvulnerable = false;
@@ -81,12 +81,12 @@ class Player extends GameObject
     if (input.isKeyDown("KeyD"))
     {
       physics.velocity.x = 150;
-      this.direction = -1;
+      this.direction = 1;
     }
     else if (input.isKeyDown("KeyA"))
     {
       physics.velocity.x = -150;
-      this.direction = 1;
+      this.direction = -1;
     }
     else
     {
@@ -144,7 +144,7 @@ class Player extends GameObject
   handlePlayerStates()
   {
     // Check if player has fallen off the bottom of the ground borders
-    if (this.y > 1300)
+    if (this.y > 1000)
     {
       this.resetPlayerState();
     }
@@ -156,7 +156,7 @@ class Player extends GameObject
     }
 
     // Check if player has collected all collectibles
-    if (this.score >= 3)
+    if (this.score >= 5)
     {
       console.log('You win!');
       location.reload();
@@ -222,10 +222,10 @@ class Player extends GameObject
   {
     // Reset the player's state, repositioning it and nullifying movement
     this.x = 300;
-    this.y = 900;
+    this.y = 650;
     this.getComponent(Physics).velocity = { x: 0, y: 0 };
     this.getComponent(Physics).acceleration = { x: 0, y: 0 };
-    this.direction = -1;
+    this.direction = 1;
     this.isOnPlatform = false;
     this.isJumping = false;
     this.jumpTimer = 0;
