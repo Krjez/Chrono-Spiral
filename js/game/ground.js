@@ -10,7 +10,6 @@ class Ground extends GameObject
         super(x, y);
         this.addComponent(new Renderer(color, width, height));
         this.addComponent(new Physics({ x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 }));
-        this.tag = "ground";
     }
 }
 export default Ground;
