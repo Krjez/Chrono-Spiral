@@ -57,7 +57,7 @@ class PlayerCollision extends Component
       const enemies = player.game.gameObjects.filter((obj) => obj instanceof Enemy);
       for (const enemy of enemies)
       {
-        if (player.getComponent(Physics).isColliding(enemy.getComponent(Physics)))
+        if (player.getComponent(Physics).isCollidingOmnidirectional(enemy.getComponent(Physics)))
         {
           this.collidedWithEnemy(player);
         }
