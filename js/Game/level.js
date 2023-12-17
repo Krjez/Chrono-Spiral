@@ -25,15 +25,11 @@ class Level extends Game {
     // Set the game's camera target to the player
     this.camera.target = player;
 
-    // Define the platform's width and the gap between platforms
-    const platformWidth = 200;
-    const gap = 100;
-
     // Create platforms and add them to the game
     const platforms = [
-      new Platform(300, this.canvas.height - 150, 70, 20),
-      new Platform(600, 300, 150, 20),
-     // new Platform(2 * (platformWidth + gap), this.canvas.height - 20, platformWidth, 20)
+      new Platform(500, 950, 70, 20),
+      new Platform(800, 800, 150, 20),
+      new Platform(200, 700, 150, 30)
     ];
     for (const platform of platforms) {
       this.addGameObject(platform);
@@ -62,7 +58,7 @@ class Level extends Game {
     //this.addGameObject(new Enemy(2 * (platformWidth + gap) + 50, this.canvas.height - 90));
 
     // Create collectibles and add them to the game
-    this.addGameObject(new Collectible(250, 1000, 20, 20));
+    this.addGameObject(new Collectible(270, 650, 20, 20));
     this.addGameObject(new Collectible(600, 800, 20, 20));
     this.addGameObject(new Collectible(1000, 1000, 20, 20));
   }

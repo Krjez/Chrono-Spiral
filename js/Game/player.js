@@ -4,21 +4,21 @@ import Renderer from '../engine/renderer.js';
 import Physics from '../engine/physics.js';
 import Input from '../engine/input.js';
 import { Images } from '../engine/resources.js';
-import Enemy from './enemy.js';
 import PlayerCollision from './playerCollision.js';
 
-import ParticleSystem from '../engine/particleSystem.js';
-
-// Defining a class Player that extends GameObject
-class Player extends GameObject {
-  // Constructor initializes the game object and add necessary components
-  constructor(x, y) {
+class Player extends GameObject
+{
+  constructor(x, y)
+  {
     super(x, y); // Call parent's constructor
     this.renderer = new Renderer('blue', 66, 112, Images.playerIdle); // Add renderer
     this.addComponent(this.renderer);
+    //Adds playerCollision. Component for handling all player-based collisions
+    this.playerCollision = new PlayerCollision();
+    this.addComponent(this.playerCollision);
     this.addComponent(new Physics({ x: 0, y: 0 }, { x: 0, y: 0 })); // Add physics
     this.addComponent(new Input()); // Add input for handling user input
-    this.addComponent(new PlayerCollision());
+    
 
     // Initialize all the player specific properties
     this.direction = -1;
@@ -46,13 +46,38 @@ class Player extends GameObject {
   }
 
   // The update function runs every frame and contains game logic
-  update(deltaTime) {
+  update(deltaTime)
+  {
     const physics = this.getComponent(Physics); // Get physics component
-    const input = this.getComponent(Input); // Get input component
+    const input = this.getComponent(Input); // Get input component    
 
-    const playerCollision = this.getComponent(PlayerCollision);
+    //All collisions necessary to update every frame - almost all gameObjects
+    this.playerCollision.continuousCollisions(this);
+
+    //Check if the player is standing on something, doesn't trigger when launching a jump
+    if(!this.isJumping)
+    {
+      this.isStandingOnSomething = this.playerCollision.standingOnCollisions(this);
+    }
+
+    //Sideways movement (A,D) and the "passive ability" Feather Fall (S)
+    this.handlePlayerMovement(physics, input);
+
+    //Jumping movement after (W) press, updating the jump
+    this.handlePlayerJump(input, deltaTime);
+
+    //Player abilities - Time Lock (Spacebar), Shattered Time (Q,E) and Key of Chronology (R)
+    this.handlePlayerAbilities(input);
     
-    // Handle player movement
+    //Handles check for amount of lives, all collectibles, reseting etc.
+    this.handlePlayerStates();
+    
+    //Calls the parent update (update on gameObjects)
+    super.update(deltaTime);
+  }
+
+  handlePlayerMovement(physics, input)
+  {
     if (input.isKeyDown("KeyD"))
     {
       physics.velocity.x = 150;
@@ -67,7 +92,15 @@ class Player extends GameObject {
     {
       physics.velocity.x = 0;
     }
+    //Falling down can be slowed down to a certain degree - "Feather Fall"
+    if(input.isKeyDown("KeyS") && !this.isOnPlatform && physics.velocity.y > 50)
+    {
+      physics.velocity.y -= 5;
+    }
+  }
 
+  handlePlayerJump(input, deltaTime)
+  {
     // Handle player jumping
     if (input.isKeyDown("KeyW") && this.isStandingOnSomething)
     {
@@ -75,20 +108,19 @@ class Player extends GameObject {
       console.log("jump start");
     }
 
-    //Faster falling down - concept for later
-    if(input.isKeyDown("KeyS") && !this.isOnPlatform)
-    {
-      physics.velocity.y += 20;
-    }
-
     if (this.isJumping) {
       this.updateJump(deltaTime);
     }
+  }
 
+  handlePlayerAbilities(input)
+  {
+    //Time Lock
     if(input.isKeyDown("Space") && !this.timeLockBuffer > 0 && !this.timeLockCooldown > 0)
     {
       this.timeLockBuffer = 30;
-      //small delay so the functions won't call each other repeatedly in consecutive frames as player holds space for longer than 1 frame
+      //small delay so the functions won't call each other repeatedly in consecutive frames
+      //as the player holds space for longer than just 1 frame
       if(!this.isTimeLockOn)
       {
        this.startTimeLock();
@@ -99,57 +131,37 @@ class Player extends GameObject {
       }
     }
 
-    //TODO cleanup better
-    if(this.timeLockBuffer > 0)
-    {
-      this.timeLockBuffer -= 1;
-    }
-
-    if(this.timeLockCooldown > 0)
-    {
-      this.timeLockCooldown -= 1;
-    }
-    
+    //TODO Shattered Time
     
 
-    playerCollision.collectibleCollision(this);
-  
-    // Handle collisions with enemies
-    const enemies = this.game.gameObjects.filter((obj) => obj instanceof Enemy);
-    for (const enemy of enemies) {
-      if (physics.isColliding(enemy.getComponent(Physics))) {
-        this.collidedWithEnemy();
-      }
-    }
-  
-    //All collisions with static objects - platforms, ground, walls etc
-    playerCollision.solidCollisions(this);
+    //TODO Key of Chronology
 
-    //Check if the player is standing on something
-    if(!this.isJumping)
-    {
-      this.isStandingOnSomething = playerCollision.standingOnCollisions(this);
-    }
 
+    this.abilitiesCountdowns();
+    
+  }
+
+  handlePlayerStates()
+  {
     // Check if player has fallen off the bottom of the ground borders
-    if (this.y > 1300) {
+    if (this.y > 1300)
+    {
       this.resetPlayerState();
     }
 
     // Check if player has no lives left
-    if (this.lives <= 0) {
+    if (this.lives <= 0)
+    {
       location.reload();
     }
 
     // Check if player has collected all collectibles
-    if (this.score >= 3) {
+    if (this.score >= 3)
+    {
       console.log('You win!');
       location.reload();
     }
-
-    super.update(deltaTime);
   }
-
 
   startJump()
   {
@@ -176,7 +188,7 @@ class Player extends GameObject {
   {
     this.isTimeLockOn = true;
     this.timeLockSaved = [this.x, this.y, this.direction, this.getComponent(Physics).velocity.x, this.getComponent(Physics).velocity.y];
-
+    //TODO display?
   }
 
   //Returns player to the saved position and starts cooldown
@@ -192,27 +204,22 @@ class Player extends GameObject {
     this.timeLockCooldown = 150;
   }
 
+  abilitiesCountdowns()
+  {
+    //TODO recheck use of setTimeout
+    if(this.timeLockBuffer > 0)
+    {
+      this.timeLockBuffer -= 1;
+    }
 
-
-  collidedWithEnemy() {
-    // Checks collision with an enemy and reduce player's life if not invulnerable
-    if (!this.isInvulnerable) {
-      this.lives--;
-      this.isInvulnerable = true;
-      // Make player vulnerable again after 2 seconds
-      setTimeout(() => {
-        this.isInvulnerable = false;
-      }, 2000);
+    if(this.timeLockCooldown > 0)
+    {
+      this.timeLockCooldown -= 1;
     }
   }
 
-  emitCollectParticles() {
-    // Create a particle system at the player's position when a collectible is collected
-    const particleSystem = new ParticleSystem(this.x, this.y, 'yellow', 20, 1, 0.5);
-    this.game.addGameObject(particleSystem);
-  }
-
-  resetPlayerState() {
+  resetPlayerState()
+  {
     // Reset the player's state, repositioning it and nullifying movement
     this.x = 300;
     this.y = 900;
@@ -222,9 +229,12 @@ class Player extends GameObject {
     this.isOnPlatform = false;
     this.isJumping = false;
     this.jumpTimer = 0;
+    this.isTimeLockOn = false;
+    this.timeLockSaved = [];
   }
 
-  resetGame() {
+  resetGame()
+  {
     // Reset the game state, which includes the player's state
     this.lives = 3;
     this.score = 0;

@@ -2,10 +2,11 @@ import Component from "../engine/component.js";
 import Physics from "../engine/physics.js";
 import Renderer from "../engine/renderer.js";
 
+import Collectible from "./collectible.js";
+import ParticleSystem from '../engine/particleSystem.js';
+import Enemy from "./enemy.js";
 import Ground from "./ground.js";
 import Platform from "./platform.js";
-import Collectible from "./collectible.js";
-
 
 
 class PlayerCollision extends Component
@@ -15,8 +16,20 @@ class PlayerCollision extends Component
       super();
     }
 
+    //All collisions that need to be handled on each frame
+    continuousCollisions(player)
+    {
+      this.collectibleCollision(player);
+      this.enemyCollision(player);
+      this.platformCollisionNotTop(player);
+      this.groundCollisionNotTop(player);
+    }
 
-
+    //Checks if player can jump, while simultaneously handles collisions where player stands on top of platform/ground
+    standingOnCollisions(player)
+    {
+      return this.groundCollisionOnTop(player) || this.platformCollisionOnTop(player);
+    }
 
     collectibleCollision(player)
     {
@@ -26,20 +39,46 @@ class PlayerCollision extends Component
         if (player.getComponent(Physics).isCollidingOmnidirectional(collectible.getComponent(Physics)))
         {
           player.score += collectible.value;
-          player.emitCollectParticles(collectible);
+          this.emitCollectParticles(player, collectible);
           console.log(`Score: ${player.score}`);
           player.game.removeGameObject(collectible);
         }
       }
     }
 
-    solidCollisions(player)
+    emitCollectParticles(player, collectible)
     {
-      this.platformCollisionNotTop(player);
-      this.groundCollisionSides(player);
+      // Create a particle system at the player's position when a collectible is collected
+      const particleSystem = new ParticleSystem(collectible.x, collectible.y, 'yellow', 20, 1, 0.5);
+      player.game.addGameObject(particleSystem);
     }
 
-    groundCollisionSides(player)
+    enemyCollision(player)
+    {
+      const enemies = player.game.gameObjects.filter((obj) => obj instanceof Enemy);
+      for (const enemy of enemies)
+      {
+        if (player.getComponent(Physics).isColliding(enemy.getComponent(Physics)))
+        {
+          player.collidedWithEnemy(player);
+        }
+      }
+    }
+
+    collidedWithEnemy(player)
+    {
+      // Checks collision with an enemy and reduce player's life if not invulnerable
+      if (!player.isInvulnerable) {
+        player.lives--;
+        player.isInvulnerable = true;
+        // Make player vulnerable again after 2 seconds
+        setTimeout(() => {
+          player.isInvulnerable = false;
+        }, 2000);
+      }
+    }
+
+    groundCollisionNotTop(player)
     {
       const grounds = player.game.gameObjects.filter((obj) => obj instanceof Ground);
       for (const ground of grounds)
@@ -49,21 +88,18 @@ class PlayerCollision extends Component
           player.getComponent(Physics).velocity.y = 0;
           player.getComponent(Physics).acceleration.y = 0;
           player.y = ground.y + ground.getComponent(Renderer).height;
-          console.log("touched bottom of ground");
         }
         if (player.getComponent(Physics).isCollidingRight(ground.getComponent(Physics)))
         {
           player.getComponent(Physics).velocity.x = 0;
           player.getComponent(Physics).acceleration.x = 0;
           player.x = ground.x - player.getComponent(Renderer).width;
-          console.log("touched ground on left");
         }
         if (player.getComponent(Physics).isCollidingLeft(ground.getComponent(Physics)))
         {
           player.getComponent(Physics).velocity.x = 0;
           player.getComponent(Physics).acceleration.x = 0;
           player.x = ground.x + ground.getComponent(Renderer).width;
-          console.log("touched ground on right");
         }
       }
     }
@@ -78,31 +114,23 @@ class PlayerCollision extends Component
           player.getComponent(Physics).velocity.y = 0;
           player.getComponent(Physics).acceleration.y = 0;
           player.y = platform.y + platform.getComponent(Renderer).height;
-          console.log("touched bottom of platform");
         }
         if(player.getComponent(Physics).isCollidingLeft(platform.getComponent(Physics)))
         {
           player.getComponent(Physics).velocity.x = 0;
           player.getComponent(Physics).acceleration.x = 0;
           player.x = platform.x + platform.getComponent(Renderer).width;
-          console.log("touched platform on left");
         }
         if(player.getComponent(Physics).isCollidingRight(platform.getComponent(Physics)))
         {
           player.getComponent(Physics).velocity.x = 0;
           player.getComponent(Physics).acceleration.x = 0;
           player.x = platform.x - player.getComponent(Renderer).width;
-          console.log("touched platform on right");
         }
       }
     }
 
-    standingOnCollisions(player)
-    {
-      return this.groundCollision(player) || this.platformCollision(player);
-    }
-
-    groundCollision(player)
+    groundCollisionOnTop(player)
     {
       this.isOnGround = false;
       const grounds = player.game.gameObjects.filter((obj) => obj instanceof Ground);
@@ -119,7 +147,7 @@ class PlayerCollision extends Component
       return this.isOnGround;
     }
 
-    platformCollision(player)
+    platformCollisionOnTop(player)
     {
       this.isOnPlatform = false;
       const platforms = player.game.gameObjects.filter((obj) => obj instanceof Platform);
@@ -135,12 +163,6 @@ class PlayerCollision extends Component
       }
       return this.isOnPlatform;
     }
-
-
-
-
-
-    
 
 }
 export default PlayerCollision;

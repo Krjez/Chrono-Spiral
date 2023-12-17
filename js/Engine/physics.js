@@ -86,14 +86,14 @@ class Physics extends Component {
 
   //Same idea as the in-class variant, but all the boxes are smaller and moved.
   //They are 90% of the original lenght on the side where they are supposed to touch the other object and centered.
-  //And they are 20% of the original lenght on the orthogonal (horizontal/vertical) axis and moved to the object's border
+  //And they are 40% of the original lenght on the orthogonal (horizontal/vertical) axis and moved to the object's border
   getBoundingBoxBottom()
   {
     const renderer = this.gameObject.getComponent(Renderer);
 
     const left = this.gameObject.x + (renderer.width * 0.05);
     const right = this.gameObject.x + (renderer.width * 0.95);
-    const top = this.gameObject.y + (renderer.height * 0.8);
+    const top = this.gameObject.y + (renderer.height * 0.6);
     const bottom = this.gameObject.y + renderer.height;
 
     return [left, right, top, bottom];
@@ -106,7 +106,7 @@ class Physics extends Component {
     const left = this.gameObject.x + (renderer.width * 0.05);
     const right = this.gameObject.x + (renderer.width * 0.95);
     const top = this.gameObject.y;
-    const bottom = this.gameObject.y + (renderer.height * 0.2);
+    const bottom = this.gameObject.y + (renderer.height * 0.4);
 
     return [left, right, top, bottom];
   }
@@ -116,7 +116,7 @@ class Physics extends Component {
     const renderer = this.gameObject.getComponent(Renderer);
 
     const left = this.gameObject.x;
-    const right = this.gameObject.x + (renderer.width * 0.2);
+    const right = this.gameObject.x + (renderer.width * 0.4);
     const top = this.gameObject.y + (renderer.height * 0.05);
     const bottom = this.gameObject.y + (renderer.height * 0.95);
 
@@ -126,7 +126,7 @@ class Physics extends Component {
   getBoundingBoxRight()
   {
     const renderer = this.gameObject.getComponent(Renderer);
-    const left = this.gameObject.x + (renderer.width * 0.8);
+    const left = this.gameObject.x + (renderer.width * 0.6);
     const right = this.gameObject.x + renderer.width;
     const top = this.gameObject.y + (renderer.height * 0.05);
     const bottom = this.gameObject.y + (renderer.height * 0.95);
