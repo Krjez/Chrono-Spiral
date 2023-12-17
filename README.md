@@ -5,6 +5,8 @@
 
 The original game idea was inspired by Mostima, time-warping character from a game Arknights.
 This is still reflected in some ability names, but the concept heavily changed during development, leaving little to no trace.
+Baseline code taken from Naoise Collins classes, heavily modified and deleted/added most of the classes.
+Original here: https://github.com/naoisecollins/2023-GD2b-JSGameEngine
 
 ## Links to videos
 WIP
@@ -14,9 +16,9 @@ A, D - movement left and right
 <br>W - fixed jump
 <br>S - "Feather Fall": Slows down falling speed, but only to a certain extent. Passive ability, can be used at any time.
 <br>Spacebar - "Time Lock": Creates a mark on specific place where the player is located. On its next use returns the player to the marked place. Common ability, has a short cooldown.
+<br>Q, E - "Shattered Time": Switching between past/present/future, changes the layout of level objects
 
 ### In development
-Q, E - "Shattered Time": Switching between past/present/future, changes the layout of level objects
 <br>R - "Key of Chronology": For a brief time slows down everything in the level except the player themselves. Ultimate ability, has huge cooldown.
 
 
