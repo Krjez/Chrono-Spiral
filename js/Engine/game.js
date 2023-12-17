@@ -4,7 +4,8 @@ import Camera from './camera.js';
 // The Game class is responsible for setting up and managing the main game loop.
 class Game {
   // The constructor initializes a new instance of the Game class.
-  constructor(canvasId) {
+  constructor(canvasId)
+  {
     // The canvas HTML element where the game will be drawn.
     this.canvas = document.getElementById(canvasId);
     // The 2D rendering context for the canvas, which is used for drawing.
@@ -23,6 +24,10 @@ class Game {
     window.addEventListener('resize', () => this.resizeCanvas());
     // Instantiate a new camera without a target and with dimensions equal to the canvas size.
     this.camera = new Camera(null, this.canvas.width, this.canvas.height);
+    //Adds "time", a state of the game - 1/2/3 for past/present/future
+    //Objects with time 0 are rendered always
+    //Then only the objects in the current "time" are rendered
+    this.time = 2;
   }
 
   // This method resizes the canvas to fill the window, with a small margin.
@@ -76,9 +81,14 @@ class Game {
     // Translate the canvas by the negative of the camera's position. This makes the camera follow its target.
     this.ctx.translate(-this.camera.x, -this.camera.y);
 
-    // Draw each game object on the canvas.
-    for (const gameObject of this.gameObjects) {
-      gameObject.draw(this.ctx);
+    // Draw game objects on the canvas, depends on the current "time"
+    for (const gameObject of this.gameObjects)
+    {
+      if(gameObject.time == 0 || gameObject.time === this.time)
+      {
+        gameObject.draw(this.ctx);
+      }
+      
     }
 
     // Restore the canvas and context to their state before the camera translation.

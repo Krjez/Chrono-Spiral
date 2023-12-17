@@ -64,7 +64,6 @@ class Enemy extends GameObject {
         this.movementDistance = 0;
         physics.velocity.x = -physics.velocity.x;
         this.direction = -1;
-        console.log("limit, shoulda move left now");
       }
     }
     else
@@ -79,7 +78,6 @@ class Enemy extends GameObject {
         this.movementDistance = 0;
         physics.velocity.x = -physics.velocity.x;
         this.direction = 1;
-        console.log("limit, shoulda move right now");
       }
     }
   }

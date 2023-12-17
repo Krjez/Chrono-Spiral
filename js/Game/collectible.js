@@ -7,9 +7,9 @@ class Collectible extends GameObject
 {
   
   //Type decides the size, value and image of the collectible
-  constructor(x, y, type)
+  constructor(x, y, type, time)
   {
-    super(x, y);
+    super(x, y, time);
     //Coin collectible of value 1, small
     if(type === "coin")
     {

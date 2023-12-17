@@ -130,8 +130,15 @@ class Player extends GameObject
       }
     }
 
-    //TODO Shattered Time
-    
+    //Shattered Time
+    if(input.isKeyDown("KeyQ") && this.game.time > 1)
+    {
+      this.game.time -= 1;
+    }
+    if(input.isKeyDown("KeyE") && this.game.time < 3)
+    {
+      this.game.time += 1;
+    }
 
     //TODO Key of Chronology
 
@@ -155,7 +162,7 @@ class Player extends GameObject
     }
 
     // Check if player has collected all collectibles
-    if (this.score >= 5)
+    if (this.score >= 7)
     {
       console.log('You win!');
       location.reload();

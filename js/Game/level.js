@@ -1,4 +1,5 @@
 import Game from '../engine/game.js';
+import Background from './background.js';
 import Player from './player.js';
 import PlayerUI from './playerUI.js';
 import Platform from './platform.js';
@@ -12,6 +13,8 @@ class Level extends Game
   {
     //Calls the constructor of the superclass (Game) with the canvas ID
     super(canvasId);
+
+    this.addGameObject(new Background(50, 50, 1600, 800, "red"));
     
     //The whole level is bordered by "grounds", inside area is 1500x700 pixels
     //Inside area top-left corner is in 100x100, bottom-right in 1600x800
@@ -24,12 +27,14 @@ class Level extends Game
     //right side wall
     this.addGameObject(new Ground(1600, 0, 50, 900));
 
-    //Platforms across the level
+    //Platforms across the level with array usage
     const platforms =
     [
-      new Platform(220, 480, 80, 20),
-      new Platform(560, 590, 400, 20),
-      new Platform(200, 700, 150, 20)
+      new Platform(220, 480, 80),
+      new Platform(560, 590, 400),
+      new Platform(200, 700, 150),
+      new Platform(1150, 630, 180),
+      new Platform(1300, 500, 150)
     ];
     for (const platform of platforms)
     {
@@ -37,9 +42,11 @@ class Level extends Game
     }
 
     // Create collectibles and add them to the game
-    this.addGameObject(new Collectible(240, 420, "coin"));
-    this.addGameObject(new Collectible(600, 560, "chest"));
-    this.addGameObject(new Collectible(1000, 450, "coin"));
+    this.addGameObject(new Collectible(240, 420, "coin", 1));
+    this.addGameObject(new Collectible(750, 560, "chest", 3));
+    this.addGameObject(new Collectible(1000, 450, "coin", 2));
+    this.addGameObject(new Collectible(1400, 250, "coin", 1));
+    this.addGameObject(new Collectible(600, 220, "coin", 2));
 
     //Create enemies and add them to the game
     this.addGameObject(new Enemy(550, 500, "golem"));

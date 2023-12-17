@@ -3,13 +3,15 @@ class GameObject {
     // The constructor initializes a new instance of the GameObject class.
     // The x and y parameters represent the position of the GameObject. 
     // They default to 0 if not provided when the object is created.
-    constructor(x = 0, y = 0) {
+    constructor(x = 0, y = 0, time = 0) {
       // The x-coordinate of the GameObject's position.
       this.x = x;
       // The y-coordinate of the GameObject's position.
       this.y = y;
       // An array to hold all the components that are attached to this GameObject.
       this.components = [];
+      //All objects are rendered by default, "time" has to be specified
+      this.time = time;
     }
   
     // The addComponent method is used to attach a new component to this GameObject.
