@@ -1,4 +1,3 @@
-// Importing necessary components and resources
 import GameObject from '../engine/gameobject.js';
 import Renderer from '../engine/renderer.js';
 import Physics from '../engine/physics.js';
@@ -221,7 +220,7 @@ class Player extends GameObject
   resetPlayerState()
   {
     // Reset the player's state, repositioning it and nullifying movement
-    this.x = 300;
+    this.x = 400;
     this.y = 650;
     this.getComponent(Physics).velocity = { x: 0, y: 0 };
     this.getComponent(Physics).acceleration = { x: 0, y: 0 };

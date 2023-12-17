@@ -5,6 +5,7 @@ const Images = {
   collectibleCoin: new Image(),
   collectibleChest: new Image(),
   enemyGolem: new Image(),
+  enemyReaper: new Image()
 };
 
 // Create an AudioFiles object to hold the file paths of the audio resources.
@@ -14,16 +15,17 @@ const AudioFiles = {
   // Add more audio file paths as needed
 };
 
-// Set the source of the player image.
-Images.playerIdle.src = "./resources/images/player/idle.png"; // Update the image path
+//Sets the source of the player image.
+Images.playerIdle.src = "./resources/images/player/idle.png";
 //Images.playerJump.src = "./resources/images/player/jump/jump.png";
 
-//Collectibles images
+//Collectibles images path
 Images.collectibleCoin.src = "./resources/images/collectibles/coin.png";
 Images.collectibleChest.src = "./resources/images/collectibles/chest.png";
 
-// Set the source of the enemy image.
-Images.enemyGolem.src = './resources/images/enemy/golem.png'; // Update the image path
+//Enemy images path set
+Images.enemyGolem.src = "./resources/images/enemy/golem.png";
+Images.enemyReaper.src = "./resources/images/enemy/reaper.png";
 
 // Export the Images and AudioFiles objects so they can be imported and used in other modules.
 export { Images, AudioFiles };

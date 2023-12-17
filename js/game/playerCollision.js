@@ -1,7 +1,6 @@
 import Component from "../engine/component.js";
 import Physics from "../engine/physics.js";
 import Renderer from "../engine/renderer.js";
-
 import Collectible from "./collectible.js";
 import ParticleSystem from '../engine/particleSystem.js';
 import Enemy from "./enemy.js";
@@ -60,7 +59,7 @@ class PlayerCollision extends Component
       {
         if (player.getComponent(Physics).isColliding(enemy.getComponent(Physics)))
         {
-          player.collidedWithEnemy(player);
+          this.collidedWithEnemy(player);
         }
       }
     }
