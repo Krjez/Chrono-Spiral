@@ -9,7 +9,8 @@ Baseline code taken from Naoise Collins classes, heavily modified and deleted/ad
 Original here: https://github.com/naoisecollins/2023-GD2b-JSGameEngine
 
 ## Links to videos
-WIP
+Game engine explanation (17.12. 2023):
+<br>https://youtu.be/oyIwj2XNspg
 
 ## Game controls
 A, D - movement left and right
